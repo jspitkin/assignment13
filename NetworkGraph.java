@@ -121,7 +121,7 @@ public class NetworkGraph {
 	 * and everything in between.
 	 */
 	public BestPath getBestPath(String origin, String destination, FlightCriteria criteria) {
-		return dijkstras(flights.get(origin), flights.get(destination), criteria);
+		return dijkstras(flights.get(origin), flights.get(destination), criteria, null);
 	}
 	
 	/**
@@ -144,11 +144,16 @@ public class NetworkGraph {
 	 * and everything in between.
 	 */
 	public BestPath getBestPath(String origin, String destination, FlightCriteria criteria, String airliner) {
-		//TODO:
-		return new BestPath();
+		return dijkstras(flights.get(origin), flights.get(destination), criteria, airliner);
 	}
 	
-	private BestPath dijkstras(Airport start, Airport goal, FlightCriteria criteria) {
+	private BestPath dijkstras(Airport start, Airport goal, FlightCriteria criteria, String airliner) {
+		
+		boolean specificAirliner = false;
+		if (airliner != null) {
+			specificAirliner = true;
+		}
+		
 		PriorityQueue<Airport> queue = new PriorityQueue<Airport>();
 		queue.add(start);
 		start.costFromStart = 0;
@@ -173,6 +178,10 @@ public class NetworkGraph {
 			current.visited = true;
 			
 			for (Flight flight : current.flights) {
+				if (specificAirliner && flight.carriers.contains(airliner)) {
+					continue;
+				}
+				
 				Airport n = flights.get(flight.destination);
 				double cost = 0.0;
 				switch(criteria) {

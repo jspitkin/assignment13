@@ -12,15 +12,15 @@ public class FindBestPathTester {
 	public static void main(String[] args) {
 		NetworkGraph airportGraph = null;
 		try {
-			airportGraph = new NetworkGraph("flights.csv");
+			airportGraph = new NetworkGraph("testfile.csv");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		// Returns the shortest distance path of flights from MOB to ACV
 		// Solution: a path of ['MOB', 'DFW', 'SFO', 'ACV'] and distance of 2253
-		BestPath shortestDistancePath = airportGraph.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
-		System.out.println(shortestDistancePath.toString());
+//		BestPath shortestDistancePath = airportGraph.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
+//		System.out.println(shortestDistancePath.toString());
 //		
 //		// Returns the shortest distance path of flights from SFO to DWF when flying with DL
 //		// Solution: a path of ['SFO', 'SLC', 'DFW'] and distance of 1588
@@ -37,7 +37,8 @@ public class FindBestPathTester {
 //		BestPath cheapestPath = airportGraph.getBestPath("LAS", "LAX", FlightCriteria.COST);
 //		System.out.println(cheapestPath.toString());
 		
-
+		BestPath shortestDistancePath = airportGraph.getBestPath("IXS", "PWB", FlightCriteria.DISTANCE, "MQ");
+		System.out.println(shortestDistancePath.toString());
 	}
 
 }
