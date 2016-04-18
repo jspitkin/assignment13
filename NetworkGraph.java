@@ -121,7 +121,7 @@ public class NetworkGraph {
 	 * and everything in between.
 	 */
 	public BestPath getBestPath(String origin, String destination, FlightCriteria criteria) {
-		return new BestPath();
+		return dijkstras(flights.get(origin), flights.get(destination), criteria);
 	}
 	
 	/**
@@ -148,31 +148,59 @@ public class NetworkGraph {
 		return new BestPath();
 	}
 	
-	private boolean dijkstras(Airport start, Airport goal) {
+	private BestPath dijkstras(Airport start, Airport goal, FlightCriteria criteria) {
 		PriorityQueue<Airport> queue = new PriorityQueue<Airport>();
 		queue.add(start);
 		start.costFromStart = 0;
 		while(!queue.isEmpty()) {
 			Airport current = queue.remove();
 			
+			// Path found - construct a BestPath object to represent it
 			if (current == goal) {
-				System.out.println(current.airportCode);
-				return true;
+				BestPath solution = new BestPath();
+				solution.pathLength = current.costFromStart;
+				
+				Airport walkPath = goal;
+				while (walkPath.previous != null) {
+					solution.path.add(0, walkPath.airportCode);
+					walkPath = walkPath.previous;
+				}
+				solution.path.add(0, start.airportCode);
+				
+				return solution;
 			}
 			
 			current.visited = true;
 			
 			for (Flight flight : current.flights) {
 				Airport n = flights.get(flight.destination);
-				if (n != null && !n.visited) {
+				double cost = 0.0;
+				switch(criteria) {
+				case COST:
+					cost = flight.cost/flight.flightCount;
+					break;
+				case DELAY:
+					cost = flight.delay/flight.flightCount;
+					break;
+				case DISTANCE:
+					cost = flight.distance/flight.flightCount;
+					break;
+				case CANCELED:
+					cost = flight.canceled/flight.flightCount;
+					break;
+				case TIME:
+					cost = flight.time/flight.flightCount;
+					break;
+				}
+				if (n != null && !n.visited && n.costFromStart > (current.costFromStart + cost)) {
 					queue.remove(n);
 					queue.add(n);
 					n.previous = current;
-					n.costFromStart = current.costFromStart + flight.cost;
+					n.costFromStart = current.costFromStart + cost;
 				}
 			}
 		}
 		
-		return false;
+		return new BestPath();
 	}
 }

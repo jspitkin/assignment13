@@ -23,5 +23,6 @@ public class Flight {
 		this.canceled = canceled;
 		this.time = time;
 		this.carriers.add(carrier);
+		this.flightCount = 1;
 	}
 }

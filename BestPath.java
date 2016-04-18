@@ -22,13 +22,18 @@ public class BestPath {
 	 * it should include them in between (turns out you can fly to Memphis
 	 * from here directly).
 	 */
-	private ArrayList<String> path;
+	 ArrayList<String> path;
 	
 	/**
 	 * Since some path costs are going to be doubles sometimes use a double
 	 * when costs are integers cast to a double.
 	 */
-	private double pathLength;
+	 double pathLength;
+	 
+	 public BestPath() {
+		 path = new ArrayList<String>();
+		 pathLength = 0.0;
+	 }
 
 	@Override
 	public boolean equals(Object o) {
