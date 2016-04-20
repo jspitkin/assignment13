@@ -149,6 +149,11 @@ public class NetworkGraph {
 	
 	private BestPath dijkstras(Airport start, Airport goal, FlightCriteria criteria, String airliner) {
 		
+		// reset the graph for running Dijkstra's more than once
+		for(Airport airport : flights.values()) { 
+			airport.reset();
+		}
+		
 		boolean specificAirliner = false;
 		if (airliner != null) {
 			specificAirliner = true;

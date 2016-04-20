@@ -14,6 +14,10 @@ public class Airport implements Comparable<Airport> {
 	public Airport(String airportCode) {
 		this.airportCode = airportCode;
 		this.flights = new HashMap<String, Flight>();
+		reset();
+	}
+	
+	public void reset() {
 		costFromStart = Integer.MAX_VALUE;
 		previous = null;
 		visited = false;
