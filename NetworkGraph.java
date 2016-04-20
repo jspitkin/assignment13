@@ -90,7 +90,7 @@ public class NetworkGraph {
             }
             else {
             	flight = new Flight(source, destination, carrier, cost, delay, distance, canceled, time);
-            	airport.flights.add(flight);
+            	airport.addFlight(destination, flight);
             }
         }
 
@@ -177,7 +177,7 @@ public class NetworkGraph {
 			
 			current.visited = true;
 			
-			for (Flight flight : current.flights) {
+			for (Flight flight : current.flights.values()) {
 				if (specificAirliner && flight.carriers.contains(airliner)) {
 					continue;
 				}

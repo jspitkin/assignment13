@@ -1,9 +1,10 @@
 package assignment13;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Airport implements Comparable<Airport> {
-	ArrayList<Flight> flights;
+	HashMap<String, Flight> flights;
+	
 	String airportCode;
 	
 	double costFromStart;
@@ -12,28 +13,22 @@ public class Airport implements Comparable<Airport> {
 	
 	public Airport(String airportCode) {
 		this.airportCode = airportCode;
-		this.flights = new ArrayList<Flight>();
+		this.flights = new HashMap<String, Flight>();
 		costFromStart = Integer.MAX_VALUE;
 		previous = null;
 		visited = false;
 	}
 	
 	public boolean containsFlight(String destination) {
-		for (Flight flight: flights) {
-			if (flight.destination == destination) {
-				return true;
-			}
-		}
-		return false;
+		return flights.containsKey(destination);
 	}
 	
 	public Flight getFlight(String destination) {
-		for (Flight flight: flights) {
-			if (flight.destination == destination) {
-				return flight;
-			}
-		}
-		return null;
+		return flights.get(destination);
+	}
+	
+	public void addFlight(String destination, Flight flight){
+		flights.put(destination, flight);
 	}
 
 	@Override
