@@ -183,7 +183,7 @@ public class NetworkGraph {
 			current.visited = true;
 			
 			for (Flight flight : current.flights.values()) {
-				if (specificAirliner && flight.carriers.contains(airliner)) {
+				if (specificAirliner && !flight.carriers.contains(airliner)) {
 					continue;
 				}
 				
