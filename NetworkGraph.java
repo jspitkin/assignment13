@@ -168,14 +168,14 @@ public class NetworkGraph {
 			// Path found - construct a BestPath object to represent it
 			if (current == goal) {
 				BestPath solution = new BestPath();
-				solution.pathLength = current.costFromStart;
+				solution.setPathLength(current.costFromStart);
 				
 				Airport walkPath = goal;
 				while (walkPath.previous != null) {
-					solution.path.add(0, walkPath.airportCode);
+					solution.addAirport(walkPath.airportCode);
 					walkPath = walkPath.previous;
 				}
-				solution.path.add(0, start.airportCode);
+				solution.addAirport(start.airportCode);
 				
 				return solution;
 			}
