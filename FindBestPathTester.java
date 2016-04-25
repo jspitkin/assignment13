@@ -1,6 +1,9 @@
 package assignment13;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.lang.reflect.Field;
 
 /**
  * <p>An example of how a user will use your best flight API.</p>
@@ -11,10 +14,10 @@ import java.util.Scanner;
  */
 public class FindBestPathTester {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		NetworkGraph airportGraph = null;
 		try {
-			airportGraph = new NetworkGraph("testfile.csv");
+			 airportGraph = new NetworkGraph("testfile.csv");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,8 +42,10 @@ public class FindBestPathTester {
 //		BestPath cheapestPath = airportGraph.getBestPath("LAS", "LAX", FlightCriteria.COST);
 //		System.out.println(cheapestPath.toString());
 		
-		// BestPath shortestDistancePath = airportGraph.getBestPath("IXS", "PWB", FlightCriteria.DISTANCE, "MQ");
-		// System.out.println(shortestDistancePath.toString());
+//		 BestPath shortestDistancePath = airportGraph.getBestPath("IXS", "PWB", FlightCriteria.DISTANCE, "MQ");
+//		 System.out.println(shortestDistancePath.toString());
+//		 ArrayList<String> expectedPath = new ArrayList<String>(Arrays.asList("IXS", "PWB"));
+//		 System.out.println(shortestDistancePath.equals(createSolutionPath(expectedPath, 2882)));
 		
 		// command-line user interface
 		if(args.length != 0){
@@ -59,8 +64,7 @@ public class FindBestPathTester {
 				
 				search = input.nextLine();
 				String[] searchArgs = search.split(" ");
-				BestPath shortestDistancePath;
-				String carrier = "";
+				BestPath cheapestPath;
 				
 				if(searchArgs.length > 1 && searchArgs.length < 5){
 					FlightCriteria criteria = FlightCriteria.DISTANCE;
@@ -84,18 +88,33 @@ public class FindBestPathTester {
 							}
 					}
 					if(searchArgs.length > 3){
-						shortestDistancePath = airportGraph.getBestPath(searchArgs[0], searchArgs[1], criteria, searchArgs[3]);
+						cheapestPath = airportGraph.getBestPath(searchArgs[0], searchArgs[1], criteria, searchArgs[3]);
 					}else{
-						shortestDistancePath = airportGraph.getBestPath(searchArgs[0], searchArgs[1], criteria);
+						cheapestPath = airportGraph.getBestPath(searchArgs[0], searchArgs[1], criteria);
 					}
-					System.out.println(shortestDistancePath);
+					System.out.println(cheapestPath);
 				}else{
 					System.out.println("Error - please utilize 2-4 search arguments.");
 				}
 				
 				System.out.println();
 			}
+			input.close();
 		}
+	}
+	
+	public static BestPath createSolutionPath(ArrayList<String> path, double pathLength) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+		BestPath solutionPath = new BestPath();
+		
+	    Field pathField = solutionPath.getClass().getDeclaredField("path");
+	    pathField.setAccessible(true);
+	    pathField.set(solutionPath, path);
+	    
+	    Field pathLengthField = solutionPath.getClass().getDeclaredField("pathLength");
+	    pathLengthField.setAccessible(true);
+	    pathLengthField.set(solutionPath, pathLength);
+	    
+	    return solutionPath;
 	}
 
 }
