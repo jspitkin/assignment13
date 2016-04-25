@@ -1,0 +1,3 @@
+This folder contains a python file to run Dijkstra's algorithm on the already aggregated dataset, stored in Python's pickle format. There is also a command-line API for this. See `graph.py` for more information.
+
+The `scripts/` folder contains more Python scripts to import, aggregate, and combine data in Python. The data sources used are from the `market` and `ontime` DoT datasets, and a ratings dataset (for carriers) which was not used in the final project this year. This could be re-run with newer data, but be careful how data is stored. I also used csvkit to help slice and dice the datasets apart and together.
