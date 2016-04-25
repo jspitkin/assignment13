@@ -22,13 +22,13 @@ public class BestPath {
 	 * it should include them in between (turns out you can fly to Memphis
 	 * from here directly).
 	 */
-	 ArrayList<String> path;
+	 private ArrayList<String> path;
 	
 	/**
 	 * Since some path costs are going to be doubles sometimes use a double
 	 * when costs are integers cast to a double.
 	 */
-	 double pathLength;
+	 private double pathLength;
 	 
 	 public BestPath() {
 		 path = new ArrayList<String>();
@@ -42,6 +42,14 @@ public class BestPath {
 			return this.pathLength == other.pathLength && this.path.equals(other.path);
 		}
 		return false;
+	}
+	
+	public void setPathLength(double d){
+		this.pathLength = d;
+	}
+	
+	public void addAirport(String s){
+		this.path.add(0, s);
 	}
 	
 	@Override
