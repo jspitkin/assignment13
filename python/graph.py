@@ -244,6 +244,26 @@ def loadAggregates():
         aggregates = pickle.load(p)
 
 
+# save aggregates data file to csv
+def saveAggregatesToCSV():
+    output = []
+    header = ["ORIGIN", "DESTINATION", "CARRIER"] + dataCols
+    output.append(header)
+    for origin in aggregates:
+        for destination in aggregates[origin]:
+            flight = aggregates[origin][destination]
+            carrier = "TA"
+            data = []
+            for column in dataCols:
+                data.append(getattr(flight, column))
+            row = [origin, destination, carrier] + data
+            output.append(row)
+    
+    with open("aggregates.csv", "w", newline="") as out:
+        writer = csv.writer(out)
+        for row in output:
+            writer.writerow(row)
+
 # Flight object, which contains an origin and destination
 class Flight:
     origin = None
