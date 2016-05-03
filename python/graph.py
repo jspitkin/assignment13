@@ -32,6 +32,7 @@ header = []
 dataCols = []
 flights = []
 airports = {}
+epsilon = 0.000000000000000001
 
 # dict of all origins, and each has a dict of all destinations! (4204 total)
 # aggregates{ORIGIN}{DESTINATION} = AggregateFlight
@@ -59,6 +60,9 @@ def main():
 # computes cheapest cost to ALL airports currently
 # optional switch to limit edges to a single carrier
 def dijkstra(origin, destination, attribute, carrier=None):
+    # globals
+    global epsilon
+    
     # reset airport nodes
     resetGraph()
 
@@ -77,7 +81,12 @@ def dijkstra(origin, destination, attribute, carrier=None):
     # could stop short, to only get cheapest path to destination
     # while not airports[destination].previous:
     while not pq.empty():
-
+        
+        # update epsilon for zero weight cycles with two criteria
+        ignoreCycles = attribute in ["DELAY", "CANCELED"]
+        if ignoreCycles:
+            epsilon = 0
+        
         # get cheapest in priority queue & iterate through its neighbors
         item = pq.get()
         cost = item[0]
@@ -99,9 +108,14 @@ def dijkstra(origin, destination, attribute, carrier=None):
 
                 # update cost of each neighbor only if cheaper
                 currentCost = airports[neighbor].cost
-                if totalCost < currentCost:
-                    airports[neighbor].cost = totalCost
-                    airports[neighbor].previous = airport
+                if (totalCost - currentCost) < epsilon:
+                    
+                    if abs(totalCost - currentCost) < epsilon:
+                        if airport not in airports[neighbor].previous:
+                            airports[neighbor].previous.append(airport)
+                    else:
+                        airports[neighbor].cost = totalCost
+                        airports[neighbor].previous = [airport]
 
                     # update priority queue as well!
                     # if already in queue, update its priority
@@ -117,23 +131,15 @@ def dijkstra(origin, destination, attribute, carrier=None):
                         pq.put((totalCost, neighbor))
 
     # create a DijkstrasResult object
-    result = DijkstrasResult(origin)
-    trace = [destination]
+    result = DijkstrasResult()
     node = airports[destination]
     result.set_cost(node.cost)
 
     # traceback our path
     # must handle when we have no valid result path too
-    while node.previous != origin and node.previous is not None:
-        node = airports[node.previous]
-        trace.append(node.str())
+    result.paths = findAllPaths(origin, destination)
 
-    # reverse path
-    while trace:
-        node = trace.pop()
-        result.add_node(node)
-
-    # return the DijkstrasResult object (path & cost)
+    # return the DijkstrasResult object (paths & cost)
     # will be invalid path and infinite cost if impossible
     return result
 
@@ -150,6 +156,51 @@ def resetGraph():
             if destination not in airports:
                 airport = Airport(destination)
                 airports[destination] = airport
+
+
+# iteratively find all valid paths from destination to source
+# super hacky, but this turned out to be quite tricky to implement
+def findAllPaths(source, destination):
+    paths = []
+    current = destination
+    finalHops = []
+    while airports[destination].previous:
+        path = [destination]
+        current = airports[destination].previous.pop()
+        temp = destination
+        addPath = True
+        while current != source:
+            addPath = True
+            if airports[current].previous:
+                airports[temp].previous.append(current)
+                path.append(current)
+                temp = current
+                current = airports[current].previous.pop()
+                if current == source:
+                    finalHops.append(temp)
+            elif current in finalHops:
+                path.append(current)
+                current = source
+            else:
+                current = source
+                addPath = False
+        if addPath:
+            path.append(source)
+            paths.append(path)
+    # reverse paths
+    for path in paths:
+        path.reverse()
+    # keep paths unique
+    pathStrings = []
+    finalPaths = []
+    for path in paths:
+        string = ""
+        for airport in path:
+            string += airport
+        if string not in pathStrings:
+            pathStrings.append(string)
+            finalPaths.append(path)
+    return finalPaths
 
 
 # reads in all flights from the source data file
@@ -309,7 +360,7 @@ class AggregateFlight(Flight):
 class Airport:
     name = None
     cost = float("inf")
-    previous = None
+    previous = []
 
     def __init__(self, n):
         self.name = n
@@ -325,21 +376,18 @@ class Airport:
 # includes a string list of the path, and the total cost
 # if cost is infinite ("INF") then no valid path exists
 class DijkstrasResult:
-    path = []
+    paths = [[]]
     cost = float("inf")
 
-    def __init__(self, o):
-        self.path = [o]
+    def __init__(self):
         self.cost = 0
-
-    def add_node(self, n):
-        self.path.append(n)
 
     def set_cost(self, c):
         self.cost = c
 
     def debug(self):
-        print(self.path)
+        for path in self.paths:
+            print(path)
         print(self.cost)
 
 
