@@ -206,7 +206,7 @@ public class NetworkGraph {
 					cost = flight.time/flight.flightCount;
 					break;
 				}
-				if(cost > 0){
+				if(cost >= 0){
 					if (n != null && !n.visited && n.costFromStart > (current.costFromStart + cost)) {
 						queue.remove(n);
 						n.previous = current;
