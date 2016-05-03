@@ -209,9 +209,9 @@ public class NetworkGraph {
 				if(cost > 0){
 					if (n != null && !n.visited && n.costFromStart > (current.costFromStart + cost)) {
 						queue.remove(n);
-						queue.add(n);
 						n.previous = current;
 						n.costFromStart = current.costFromStart + cost;
+            queue.add(n);
 					}
 				}
 			}
