@@ -3,7 +3,7 @@
  */
 package assignment13;
 
-import java.io.FileNotFoundException;
+import java.io.FileNotFoundException; 
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.SortedSet;
  * with the command line you can also compile it with <code>javac</code> and give it 3
  * command-line parameters: (1)The number of edges you want in the graph, (2)the number
  * of nodes in the graph, and (3)the name of the file for the .csv file to output to.
- * Keep in mind dense graphs will have shorter paths and sparse graphs may not have paths
+ * Keep in mind dense graphs will have shorter paths and sparce graphs may not have paths
  * to every node.</p>
  *
  * @author Jase Bleazard
@@ -36,8 +36,8 @@ import java.util.SortedSet;
 public class GenerateFlightData {
 	
 	// ONLY EDIT THESE THREE VARIABLES
-	private static int edgeCount = 15;
-	private static int nodeCount = 5;
+	private static int edgeCount = 150;
+	private static int nodeCount = 50;
 	private static String filePath = "testfile.csv";
 
 	// EDITING ANYTHING BELOW THIS MAY SCREW UP MY CODE SO DO SO AT YOUR OWN RISK.
@@ -108,6 +108,7 @@ public class GenerateFlightData {
 
 	private static int generateEstimatedFlightTime(String origin, String destination) {
 		return (int)(flightDistances.get(new NodeDistance(origin, destination)) / TIME_DISTANCE_RATIO);
+		// TODO ???
 	}
 
 	private static void generateRandomAirlinerCosts() {
