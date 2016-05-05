@@ -2,6 +2,7 @@ package assignment13;
 
 import static org.junit.Assert.*; 
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class Assignment13GradingTests
 	static DecimalFormat df4, df2, df1;
 
 	@BeforeClass
-	public void setUp() throws Exception
+	public static void setUp() throws Exception
 	{
 		aggregatedDataset = new NetworkGraph("aggregates.csv");
 		fullDataset = new NetworkGraph("flights-2015-q3.csv");
@@ -33,6 +34,13 @@ public class Assignment13GradingTests
 
 	}
 
+	@AfterClass
+	public static void tearDown() throws Exception
+	{
+		System.out.println(aggreagatePoints);
+		System.out.println(fullDatasetPoints);
+		System.out.println(smallDatasetPoints);
+	}
 
 	// String answer = "Path Length: " + "2253.0" + "\nPath: " +
 	// "[MOB, DFW, SFO, ACV]";
