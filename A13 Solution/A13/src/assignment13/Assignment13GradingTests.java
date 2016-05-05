@@ -2,7 +2,7 @@ package assignment13;
 
 import static org.junit.Assert.*; 
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -13,11 +13,11 @@ import java.util.ArrayList;
 public class Assignment13GradingTests
 {
 
-	NetworkGraph aggregatedDataset, fullDataset, smallDataset;
-	int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
-	DecimalFormat df4, df2, df1;
+	static NetworkGraph aggregatedDataset, fullDataset, smallDataset;
+	static int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
+	static DecimalFormat df4, df2, df1;
 
-	@Before
+	@BeforeClass
 	public void setUp() throws Exception
 	{
 		aggregatedDataset = new NetworkGraph("aggregates.csv");
