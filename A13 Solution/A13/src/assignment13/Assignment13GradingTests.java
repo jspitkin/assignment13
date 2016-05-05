@@ -3,7 +3,7 @@ package assignment13;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 public class Assignment13GradingTests
 {
 
-	NetworkGraph alreadyAggregated, fullDataset, smallDataset;
-	int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
-	DecimalFormat df4, df2;
+	static NetworkGraph alreadyAggregated, fullDataset, smallDataset;
+	static int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
+	static DecimalFormat df4, df2;
 
-	@Before
-	public void setUp() throws Exception
+	@BeforeClass
+	public static void setUp() throws Exception
 	{
 		alreadyAggregated = new NetworkGraph("aggregates.csv");
 		fullDataset = new NetworkGraph("flights-2015-q3.csv");
