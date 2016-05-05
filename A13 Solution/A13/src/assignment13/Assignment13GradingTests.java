@@ -1,9 +1,8 @@
 package assignment13;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*; 
 
-import org.junit.After;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -14,14 +13,14 @@ import java.util.ArrayList;
 public class Assignment13GradingTests
 {
 
-	static NetworkGraph alreadyAggregated, fullDataset, smallDataset;
-	static int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
-	static DecimalFormat df4, df2;
+	NetworkGraph aggregatedDataset, fullDataset, smallDataset;
+	int total, aggreagatePoints, fullDatasetPoints, smallDatasetPoints;
+	DecimalFormat df4, df2, df1;
 
-	@BeforeClass
-	public static void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
-		alreadyAggregated = new NetworkGraph("aggregates.csv");
+		aggregatedDataset = new NetworkGraph("aggregates.csv");
 		fullDataset = new NetworkGraph("flights-2015-q3.csv");
 		smallDataset = new NetworkGraph("testfile.csv");
 		total = 0;
@@ -30,431 +29,1830 @@ public class Assignment13GradingTests
 		smallDatasetPoints = 0; // total of 40 points
 		df4 = new DecimalFormat("0.0000");
 		df2 = new DecimalFormat("0.00");
+		df1 = new DecimalFormat("0.0");
 
 	}
 
-	@After
-	public void tearDown() throws Exception
-	{
-	}
 
+	// String answer = "Path Length: " + "2253.0" + "\nPath: " +
+	// "[MOB, DFW, SFO, ACV]";
+	/**
+	 * This tests the aggreagate and full dataset path's.
+	 */
 	@Test
 	public void testMOBtoACVDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "2253.0" + "\nPath: " + "[MOB, DFW, SFO, ACV]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(2253.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("MOB"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("DFW"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("SFO"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(4).equals("ACV"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("MOB"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("DFW"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("SFO"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(4).equals("ACV"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: MOB to ACV Distance");
 	}
 
+	// String answer = "Path Length: " + "1588.0" + "\nPath: " +
+	// "[SFO, SLC, DFW]";
+	// CANNOT DO WITH AGGREGATE.CSV
+	/**
+	 * This test is for the full data set only.
+	 */
 	@Test
 	public void testSFOtoDFWDistance()
 	{
-		BestPath bestPath = fullDataset.getBestPath("SFO", "DFW", FlightCriteria.DISTANCE, "DL");
+		BestPath fullPath = fullDataset.getBestPath("SFO", "DFW", FlightCriteria.DISTANCE, "DL");
 
-		String answer = "Path Length: " + "1588.0" + "\nPath: " + "[SFO, SLC, DFW]";
-		
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(1588.0);
+
+		if (fullAnswer.equals(correctCost))
 		{
-			fail();
+			fullDatasetPoints++;
 		}
+		if (checkFullPath.get(1).equals("SFO"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("DFW"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: SFO to DFW Distance");
 	}
 
+	/**
+	 * This tests both the aggregate and full dataset. String answer =
+	 * "Path Length: " + "269.2534145" + "\nPath: " + "[MOB, DFW, SLC]";
+	 */
 	@Test
 	public void testMOBtoSLCTime()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("MOB", "SLC", FlightCriteria.TIME);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "SLC", FlightCriteria.TIME);
 
-		String answer = "Path Length: " + "269.2534145" + "\nPath: " + "[MOB, DFW, SLC]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("MOB", "SLC", FlightCriteria.TIME);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df4.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df4.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df4.format(269.2534145);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			ArrayList<String> checkPath = breakUpPath(bestPath);
-			String n1 = df4.format(Double.parseDouble(checkPath.get(0)));
-			String n2 = df4.format(269.2534145);
-			
-			if (!bestPath.toString().equals(answer))
-			{
-				int count = 0;
-				if (!bestPath.toString().equals(answer))
-				{
-					if(!n1.equals(n2))
-					{
-						count++;
-						// take away from total points
-					}
-					if(!checkPath.get(1).equals("IMT"))
-					{
-						count++;
-						// take away some total points
-					}
-					if(!checkPath.get(2).equals("MSP"))
-					{
-						count++;
-					}
-					if(!checkPath.get(3).equals("RHI"))
-					{
-						count++;
-					}
-					if(count == 4)
-					{
-						fail();
-					}
-				}
-			}
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("MOB"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("DFW"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("SLC"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("MOB"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("DFW"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: MOB to SLC Time");
 	}
 
+	/**
+	 * Tests both aggregate and full dataset. String answer = "Path Length: " +
+	 * "138.39" + "\nPath: " + "[LAS, LAX]";
+	 */
 	@Test
 	public void testLAStoLAXCost()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("LAS", "LAX", FlightCriteria.COST);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("LAS", "LAX", FlightCriteria.COST);
 
-		String answer = "Path Length: " + "138.39" + "\nPath: " + "[LAS, LAX]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("LAS", "LAX", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df2.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df2.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df2.format(138.39);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			ArrayList<String> checkPath = breakUpPath(bestPath);
-			String n1 = df2.format(Double.parseDouble(checkPath.get(0)));
-			String n2 = df2.format(138.39);
-			
-			int count = 0;
-			if (!bestPath.toString().equals(answer))
-			{
-				if(!n1.equals(n2))
-				{
-					count++;
-					// take away from total points
-				}
-				if(!checkPath.get(1).equals("IMT"))
-				{
-					count++;
-					// take away some total points
-				}
-				if(!checkPath.get(2).equals("MSP"))
-				{
-					count++;
-				}
-				if(count == 3)
-				{
-					fail();
-				}
-			}
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("LAS"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("LAX"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("LAS"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("LAX"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: LAS to LAX Cost");
 	}
 
+	/**
+	 * Tests both aggregate and the full dataset. String answer =
+	 * "Path Length: " + "2163.0" + "\nPath: " + "[SLC, JFK, MVY]"; Multiple
+	 * paths possible.
+	 */
 	@Test
 	public void testSLCtoMVYDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "2163.0" + "\nPath: " + "[SLC, JFK, MVY]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(2163.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.contains("SLC"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("MVY"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("JFK"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.contains("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("MVY"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("JFK"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: SLC to MVY Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data set. multiple paths possible. String
+	 * answer = "Path Length: " + "3035.0" + "\nPath: " +
+	 * "[ACK, JFK, SFO, ACV]";
+	 */
 	@Test
 	public void testACKtoACVDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACK", "ACV", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACK", "ACV", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "3035.0" + "\nPath: " + "[ACK, JFK, SFO, ACV]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("ACK", "ACV", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(3035.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.contains("ACK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("JFK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("SFO"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("ACV"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ACK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("JFK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("SFO"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ACV"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: ACK to ACV Distance");
 	}
 
+	/**
+	 * Infinitely many paths, only checking cost. Tests both aggregate and full
+	 * data set.
+	 */
 	@Test
 	public void testACKtoACVCancelled()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACK", "ACV", FlightCriteria.CANCELED);
-		ArrayList<String> checkPath = breakUpPath(bestPath);
-		String n1 = df4.format(Double.parseDouble(checkPath.get(0)));
-		String n2 = df4.format(0.04591496121);
-		assertTrue(n1.equals(n2));
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACK", "ACV", FlightCriteria.CANCELED);
+
+		BestPath fullPath = fullDataset.getBestPath("ACK", "ACV", FlightCriteria.CANCELED);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df4.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df4.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df4.format(0.04591496121);
+
+		if (aggAnswer.equals(correctCost))
+		{
+			aggreagatePoints += 5;
+		}
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 5;
+		}
+
+		System.out.println("PASSED: ACK to ACV Cancelled");
 	}
 
+	// TODO
+	/**
+	 * Tests both aggregate and full data set. Multiple path's possible.
+	 */
 	@Test
 	public void testACKtoWYSDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACK", "WYS", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACK", "WYS", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "2462.0" + "\nPath: " + "[ACK, JFK, SLC, WYS]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("ACK", "WYS", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(2462.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.contains("ACK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("JFK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("SLC"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("WYS"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ACK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("JFK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("WYS"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: ACK to WYS Distance");
 	}
 
-	// only check cost
+	/**
+	 * tests aggregate and full data set. Infinitely many path's possible.
+	 */
 	@Test
 	public void testACKtoWYSCancelled()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACK", "WYS", FlightCriteria.CANCELED);
-		ArrayList<String> checkPath = breakUpPath(bestPath);
-		String n1 = df4.format(Double.parseDouble(checkPath.get(0)));
-		String n2 = df4.format(0.004132231405);
-		assertTrue(n1.equals(n2));
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACK", "WYS", FlightCriteria.CANCELED);
+
+		BestPath fullPath = fullDataset.getBestPath("ACK", "WYS", FlightCriteria.CANCELED);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df4.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df4.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df4.format(0.004132231405);
+
+		if (aggAnswer.equals(correctCost))
+		{
+			aggreagatePoints += 5;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 5;
+		}
+
+		System.out.println("PASSED: ACK to WYS Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data set. String answer = "Path Length: " +
+	 * "1122.0" + "\nPath: " + "[ACV, SFO, SLC, WYS]";
+	 */
 	@Test
 	public void testACVtoWYSDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACV", "WYS", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACV", "WYS", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "1122.0" + "\nPath: " + "[ACV, SFO, SLC, WYS]";
-		
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("ACV", "WYS", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(1122.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("ACV"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("SFO"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("SLC"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(4).equals("WYS"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("ACV"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("SFO"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(4).equals("WYS"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: ACV to WYS Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data structure.
+	 */
 	@Test
 	public void testACVtoWYSCancelled()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ACV", "WYS", FlightCriteria.CANCELED);
-		ArrayList<String> checkPath = breakUpPath(bestPath);
-		String n1 = df4.format(Double.parseDouble(checkPath.get(0)));
-		String n2 = df4.format(0.03899721448);
-		assertTrue(n1.equals(n2));
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ACV", "WYS", FlightCriteria.CANCELED);
+
+		BestPath fullPath = fullDataset.getBestPath("ACV", "WYS", FlightCriteria.CANCELED);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df4.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df4.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df4.format(0.03899721448);
+
+		if (aggAnswer.equals(correctCost))
+		{
+			aggreagatePoints += 5;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 5;
+		}
+
+		System.out.println("PASSED: ACV to WYS Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data set. Multiple path's possible.
+	 */
 	@Test
 	public void testMOBtoSLCDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("MOB", "SLC", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "SLC", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "1528.0" + "\nPath: " + "[MOB, DFW, GJT, SLC]";
-		String answer2 = "Path Length: " + "1528.0" + "\nPath: " + "[MOB, DFW, SLC]";
+		BestPath fullPath = fullDataset.getBestPath("MOB", "SLC", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer) && !bestPath.toString().equals(answer2))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(1528.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.contains("MOB"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("DFW"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("SLC"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.contains("MOB"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("DFW"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: MOB to SLC Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data set. Multiple path's possible.
+	 */
 	@Test
 	public void testMOBtoMVYDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("MOB", "MVY", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "MVY", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "1235.0" + "\nPath: " + "[MOB, ATL, DCA, JFK, MVY]";
-		String answer2 = "Path Length: " + "1235.0" + "\nPath: " + "[MOB, ATL, JFK, MVY]";
+		BestPath fullPath = fullDataset.getBestPath("MOB", "MVY", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer) && !bestPath.toString().equals(answer2))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(1235.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.contains("MOB"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("ATL"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("JFK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("MVY"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("MOB"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ATL"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("JFK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("MVY"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: MOB to MVY Distance");
+
 	}
 
+	/**
+	 * Tests both aggregate and full data set.
+	 */
 	@Test
 	public void testITOtoMOBDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ITO", "MOB", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ITO", "MOB", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "4223.0" + "\nPath: " + "[ITO, LAX, DFW, MOB]";
+		BestPath fullPath = fullDataset.getBestPath("ITO", "MOB", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(4223.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("ITO"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("LAX"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("DFW"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(4).equals("MOB"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("ITO"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("LAX"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("DFW"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(4).equals("MOB"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: ITO to MOB Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data structure. String answer =
+	 * "Path Length: " + "205.0" + "\nPath: " + "[KOA, OGG, ITO]";
+	 */
 	@Test
 	public void testKOAtoITODistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("KOA", "ITO", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "205.0" + "\nPath: " + "[KOA, OGG, ITO]";
+		BestPath aggregatePath = aggregatedDataset.getBestPath("KOA", "ITO", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		BestPath fullPath = fullDataset.getBestPath("KOA", "ITO", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(205.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.get(1).equals("KOA"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("OGG"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("ITO"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.get(1).equals("KOA"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("OGG"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("ITO"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: KOA to ITO Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data structure. Multiple paths possible.
+	 */
 	@Test
 	public void testKOAtoCWADistance()
 	{
-		BestPath bestPath = fullDataset.getBestPath("KOA", "CWA", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("KOA", "CWA", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "4425.0" + "\nPath: " + "[KOA, SFO, ORD, CWA]";
-		String answer2 = "Path Length: " + "4425.0" + "\nPath: " + "[KOA, SJC, ORD, CWA]";
+		BestPath fullPath = fullDataset.getBestPath("KOA", "CWA", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer) && !bestPath.toString().equals(answer2))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(4425.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.contains("KOA"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("ORD"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("CWA"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.contains("KOA"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ORD"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("SLC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("CWA"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: KOA to CWA Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data structure. String answer =
+	 * "Path Length: " + "2993.0" + "\nPath: " + "[ANC, HNL, ITO]";
+	 */
 	@Test
 	public void testANCtoITODistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("ANC", "ITO", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("ANC", "ITO", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "2993.0" + "\nPath: " + "[ANC, HNL, ITO]";
+		BestPath fullPath = fullDataset.getBestPath("ANC", "ITO", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(2993.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.get(1).equals("ANC"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("HNL"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("ITO"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.get(1).equals("ANC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("HNL"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("ITO"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: ANC to ITO Distance");
 	}
 
+	/**
+	 * Test both aggregate and full data structure. String answer =
+	 * "Path Length: " + "3254.0" + "\nPath: " + "[FAI, ANC, HNL, ITO]";
+	 */
 	@Test
 	public void testFAItoITODistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("FAI", "ITO", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("FAI", "ITO", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "3254.0" + "\nPath: " + "[FAI, ANC, HNL, ITO]";
+		BestPath fullPath = fullDataset.getBestPath("FAI", "ITO", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(3254.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.get(1).equals("FAI"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("ANC"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("HNL"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(4).equals("ITO"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(1).equals("FAI"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("ANC"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("HNL"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(4).equals("ITO"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: FAI to ITO Distance");
 	}
 
+	/**
+	 * Tests both aggregate and full data set. String answer = "Path Length: " +
+	 * "261.0" + "\nPath: " + "[FAI, ANC]";
+	 */
 	@Test
 	public void testFAItoANCDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("FAI", "ANC", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("FAI", "ANC", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "261.0" + "\nPath: " + "[FAI, ANC]";
+		BestPath fullPath = fullDataset.getBestPath("FAI", "ANC", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(261.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 3;
 		}
+		if (checkAggregatePath.get(1).equals("FAI"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("ANC"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 3;
+		}
+		if (checkFullPath.get(1).equals("FAI"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("ANC"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: FAI to ANC Distance");
 	}
 
+	/**
+	 * Tests aggregated and full data set. Multiple paths possible.
+	 */
 	@Test
 	public void testFAItoGNVDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("FAI", "GNV", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("FAI", "GNV", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "3673.0" + "\nPath: " + "[FAI, MSP, RST, ATL, GNV]";
-		String answer2 = "Path Length: " + "3673.0" + "\nPath: " + "[FAI, MSP, MLI, ATL, GNV]";
-		String answer3 = "Path Length: " + "3673.0" + "\nPath: " + "[FAI, MSP, ATL, GNV]";
+		BestPath fullPath = fullDataset.getBestPath("FAI", "GNV", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer) && !bestPath.toString().equals(answer2) && !bestPath.toString().equals(answer3))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(3673.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints++;
 		}
+		if (checkAggregatePath.contains("FAI"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("MSP"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("ATL"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("GNV"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("FAI"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("MSP"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("ATL"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("GNV"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: FAI to GNV Distance");
 	}
 
+	/**
+	 * tests both aggregate and full data set. Multiple paths possible.
+	 */
 	@Test
 	public void testFLLtoFAIDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("FLL", "FAI", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("FLL", "FAI", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "3953.0" + "\nPath: " + "[FLL, MCO, MSP, FAI]";
-		String answer2 = "Path Length: " + "3953.0" + "\nPath: " + "[FLL, MSP, FAI]";
+		BestPath fullPath = fullDataset.getBestPath("FLL", "FAI", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer) && !bestPath.toString().equals(answer2))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(3953.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.contains("FLL"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("MSP"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.contains("FAI"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.contains("FLL"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("MSP"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.contains("FAI"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: FLL to FAI Distance");
 	}
 
+	// TODO
 	@Test
 	public void testPWMtoMVYDistance()
 	{
-		BestPath bestPath = alreadyAggregated.getBestPath("PWM", "MVY", FlightCriteria.DISTANCE);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("PWM", "MVY", FlightCriteria.DISTANCE);
 
-		String answer = "Path Length: " + "446.0" + "\nPath: " + "[PWM, JFK, MVY]";
+		BestPath fullPath = fullDataset.getBestPath("PWM", "MVY", FlightCriteria.DISTANCE);
 
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(446.0);
+
+		if (aggAnswer.equals(correctCost))
 		{
-			fail();
+			aggreagatePoints += 2;
 		}
+		if (checkAggregatePath.get(1).equals("PWM"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(2).equals("JFK"))
+		{
+			aggreagatePoints++;
+		}
+		if (checkAggregatePath.get(3).equals("MVY"))
+		{
+			aggreagatePoints++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.get(1).equals("PWM"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(2).equals("JFK"))
+		{
+			fullDatasetPoints++;
+		}
+		if (checkFullPath.get(3).equals("MVY"))
+		{
+			fullDatasetPoints++;
+		}
+
+		System.out.println("PASSED: PWM to MVY Distance");
 	}
 
+	/**
+	 * This tests only the full data set.
+	 * Worth 10 points
+	 */
 	@Test
 	public void testSLCtoMVYDistanceWithB6Carrier()
 	{
-		BestPath bestPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "B6");
+		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "B6");
 
-		String answer = "Path Length: " + "2163.0" + "\nPath: " + "[SLC, JFK, MVY]";
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
 
-		if (!bestPath.toString().equals(answer))
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(2163.0);
+
+		if (fullAnswer.equals(correctCost))
 		{
-			fail();
+			fullDatasetPoints += 4;
 		}
+		if (checkFullPath.get(1).equals("SLC"))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.get(2).equals("JFK"))
+		{
+			fullDatasetPoints += 2;
+		}
+		if (checkFullPath.get(3).equals("MVY"))
+		{
+			fullDatasetPoints += 2;
+		}
+
+		System.out.println("PASSED: SCL to MVY Distance with B6 Carrier");
+		
 	}
 
+
+	/**
+	 * This test is only for the full data set. 
+	 */
 	@Test
 	public void testSLCtoMVYDistanceWithDLCarrier()
 	{
-		BestPath bestPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "DL");
+		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "DL");
 
-		String answer = "Path Length: " + "0.0" + "\nPath: " + "[]";
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
 
-		if (!bestPath.toString().equals(answer))
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(0.0);
+
+		if (fullAnswer.equals(correctCost))
 		{
-			fail();
+			fullDatasetPoints += 4;
 		}
+		if (checkFullPath.size() == 2)
+		{
+			fullDatasetPoints += 2;
+		}
+
+		System.out.println("PASSED: SLC to MVY Distance with DL Carrier");
 	}
 
 	// The following tests are only to be 10 points of the final grade
 
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * 		String answer = "Path Length: " + "288.31" + "\nPath: " + "[IMT, MSP, RHI]";
+	 */
 	@Test
 	public void testIMTtoRHICost()
 	{
-		BestPath bestPath = fullDataset.getBestPath("IMT", "RHI", FlightCriteria.COST);
-		
-		ArrayList<String> checkPath = breakUpPath(bestPath);
+		BestPath aggregatePath = aggregatedDataset.getBestPath("IMT", "RHI", FlightCriteria.COST);
 
-		String n1 = df2.format(Double.parseDouble(checkPath.get(0)));
-		String n2 = df2.format(288.31);
-		
-		String answer = "Path Length: " + "288.31" + "\nPath: " + "[IMT, MSP, RHI]";
+		BestPath fullPath = fullDataset.getBestPath("IMT", "RHI", FlightCriteria.COST);
 
-		int count = 0;
-		if (!bestPath.toString().equals(answer))
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df2.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df2.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df2.format(288.31);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
 		{
-			if(!n1.equals(n2))
-			{
-				count++;
-				// take away from total points
-			}
-			if(!checkPath.get(1).equals("IMT"))
-			{
-				count++;
-				// take away some total points
-			}
-			if(!checkPath.get(2).equals("MSP"))
-			{
-				count++;
-			}
-			if(!checkPath.get(3).equals("RHI"))
-			{
-				count++;
-			}
-			if(count == 4)
-			{
-				fail();
-			}
+			count1++;
 		}
+		if (checkAggregatePath.get(1).equals("IMT"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("MSP"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("RHI"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("IMT"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("MSP"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("RHI"))
+		{
+			count2++;
+		}
+
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: IMT to RHI Cost");
 	}
 
-	/*
-	 * IMT RHI COST ['IMT', 'MSP', 'RHI'] 288.31 CDV YAK COST ['CDV', 'ANC',
-	 * 'JNU', 'YAK'] 521.5 FCA MSO COST ['FCA', 'SLC', 'MSO'] 577 MEI PIB COST
-	 * [] 0 INL HIB COST ['INL', 'MSP', 'HIB'] 311.33 SAV BQK COST ['SAV',
-	 * 'ATL', 'BQK'] 430.65 HIB INL COST ['HIB', 'MSP', 'INL'] 271.52 RHI IMT
-	 * COST ['RHI', 'MSP', 'IMT'] 348.5 DVL JMS COST ['DVL', 'DEN', 'JMS']
-	 * 340.93
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * * CDV YAK COST ['CDV', 'ANC','JNU', 'YAK'] 521.5
 	 */
+	@Test
+	public void testCDVtoYAKCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("CDV", "YAK", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("CDV", "YAK", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(521.5);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("CDV"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("ANC"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("JNU"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(4).equals("YAK"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("CDV"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("ANC"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("JNU"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(4).equals("YAK"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: CDV to YAK Cost");
+	}
+
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * FCA MSO COST ['FCA', 'SLC', 'MSO'] 577
+	 */
+	@Test
+	public void testFCAtoMSOCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("FCA", "MSO", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("FCA", "MSO", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(577.0);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("FCA"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("SLC"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("MSO"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("FCA"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("SLC"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("MSO"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: FCA to MSO Cost");
+	}
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * MEI PIB COST [] 0
+	 */
+	@Test
+	public void testMEItoPIBCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("MEI", "PIB", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("MEI", "PIB", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(0.0);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		
+		if (count1 == 1)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 1)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: MEI to PIB Cost");
+	}
+
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * INL HIB COST ['INL', 'MSP', 'HIB'] 311.33
+	 */
+	@Test
+	public void testINLtoHIBCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("INL", "HIB", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("INL", "HIB", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df2.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df2.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df2.format(311.33);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("INL"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("MSP"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("HIB"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("INL"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("MSP"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("HIB"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: INL to HIB Cost");
+	}
+
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * SAV BQK COST ['SAV','ATL', 'BQK'] 430.65
+	 */
+	@Test
+	public void testSAVtoBQKCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("SAV", "BQK", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("SAV", "BQK", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df2.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df2.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df2.format(430.65);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("SAV"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("ATL"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("BQK"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("SAV"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("ATL"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("BQK"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: SAV to BQK Cost");
+
+	}
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * HIB INL COST ['HIB', 'MSP', 'INL'] 271.52
+	 */
+	@Test
+	public void testHIBtoINLCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("HIB", "INL", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("HIB", "INL", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df2.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df2.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df2.format(271.52);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("HIB"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("MSP"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("INL"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("HIB"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("MSP"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("INL"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: HIB to INL Cost");
+	}
+
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * RHI IMT COST ['RHI', 'MSP', 'IMT'] 348.5
+	 */
+	@Test
+	public void testRHItoIMTCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("RHI", "IMT", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("RHI", "IMT", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(348.5);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("RHI"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("MSP"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("IMT"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("RHI"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("MSP"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("IMT"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: RHI to IMT Cost");
+	}
+
+
+	/**
+	 * --> these are edges for avoiding negative cycles! together, no more than 5% of grade (10 pts)
+	 * DVL JMS COST ['DVL', 'DEN', 'JMS'] 340.93
+	 */
+	@Test
+	public void testDVLtoJMSCost()
+	{
+		BestPath aggregatePath = aggregatedDataset.getBestPath("DVL", "JMS", FlightCriteria.COST);
+
+		BestPath fullPath = fullDataset.getBestPath("DVL", "JMS", FlightCriteria.COST);
+
+		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+		ArrayList<String> checkFullPath = breakUpPath(fullPath);
+
+		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+		String fullAnswer = df1.format(Double.parseDouble(checkFullPath.get(0)));
+		String correctCost = df1.format(340.93);
+
+		int count1 = 0;
+		int count2 = 0;
+		
+		if (aggAnswer.equals(correctCost))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(1).equals("DVL"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(2).equals("DEN"))
+		{
+			count1++;
+		}
+		if (checkAggregatePath.get(3).equals("JMS"))
+		{
+			count1++;
+		}
+
+		if (fullAnswer.equals(correctCost))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(1).equals("DVL"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(2).equals("DEN"))
+		{
+			count2++;
+		}
+		if (checkFullPath.get(3).equals("JMS"))
+		{
+			count2++;
+		}
+		
+		if (count1 == 4)
+		{
+			aggreagatePoints++;
+		}
+		if (count2 == 4)
+		{
+			fullDatasetPoints++;
+		}
+		
+		System.out.println("PASSED: DVL to JMS Cost");
+	}
 
 	/**
 	 * This method itemizes each piece of the given path in an ArrayList of
