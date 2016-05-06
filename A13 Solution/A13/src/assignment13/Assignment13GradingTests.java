@@ -36,38 +36,42 @@ public class Assignment13GradingTests
 
 	}
 
+	// uncomment to see total
 	@AfterClass
 	public static void tearDown() throws Exception
 	{
-		System.out.println(aggregatePoints + "/20");
-		System.out.println(fullDatasetPoints +"/60");
-		System.out.println(smallDatasetPoints);
+//		System.out.println(aggregatePoints + "/20");
+//		System.out.println(fullDatasetPoints + "/60");
+//		System.out.println(smallDatasetPoints + "/40");
 	}
 
-	// String answer = "Path Length: " + "2253.0" + "\nPath: " +
-	// "[MOB, DFW, SFO, ACV]";
-	/**
-	 * This tests the aggreagate and full dataset path's.
-	 */
-	@Test
-	@Autograder(points = 1, group = "aggregated data set")
-	public void testMOBtoACVDistanceAggregated()
-	{
-		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
+	// The following tests are for aggregated.csv and the flights-2015-q3.csv
 
-		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
-
-		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
-		String correctCost = df1.format(2253.0);
-
-		assertTrue(aggAnswer.equals(correctCost));
-		assertTrue(checkAggregatePath.get(1).equals("MOB"));
-		assertTrue(checkAggregatePath.get(2).equals("DFW"));
-		assertTrue(checkAggregatePath.get(3).equals("SFO"));
-		assertTrue(checkAggregatePath.get(4).equals("ACV"));
-
-		aggregatePoints += 1;
-	}
+	// puts aggregated tests over 20 points
+//	// String answer = "Path Length: " + "2253.0" + "\nPath: " +
+//	// "[MOB, DFW, SFO, ACV]";
+//	/**
+//	 * This tests the aggreagate and full dataset path's.
+//	 */
+//	@Test
+//	@Autograder(points = 1, group = "aggregated data set")
+//	public void testMOBtoACVDistanceAggregated()
+//	{
+//		BestPath aggregatePath = aggregatedDataset.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
+//
+//		ArrayList<String> checkAggregatePath = breakUpPath(aggregatePath);
+//
+//		String aggAnswer = df1.format(Double.parseDouble(checkAggregatePath.get(0)));
+//		String correctCost = df1.format(2253.0);
+//
+//		assertTrue(aggAnswer.equals(correctCost));
+//		assertTrue(checkAggregatePath.get(1).equals("MOB"));
+//		assertTrue(checkAggregatePath.get(2).equals("DFW"));
+//		assertTrue(checkAggregatePath.get(3).equals("SFO"));
+//		assertTrue(checkAggregatePath.get(4).equals("ACV"));
+//
+//		aggregatePoints += 1;
+//	}
 
 	// String answer = "Path Length: " + "2253.0" + "\nPath: " +
 	// "[MOB, DFW, SFO, ACV]";
@@ -983,7 +987,7 @@ public class Assignment13GradingTests
 	 * This tests only the full data set. Worth 5 points
 	 */
 	@Test
-	@Autograder(points = 9, group = "full data set")
+	@Autograder(points = 7, group = "full data set")
 	public void testSLCtoMVYDistanceWithB6CarrierFullDataset()
 	{
 		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "B6");
@@ -997,7 +1001,7 @@ public class Assignment13GradingTests
 		assertTrue(checkFullPath.get(1).equals("SLC"));
 		assertTrue(checkFullPath.get(2).equals("JFK"));
 		assertTrue(checkFullPath.get(3).equals("MVY"));
-		fullDatasetPoints += 10;
+		fullDatasetPoints += 7;
 
 	}
 
@@ -1005,7 +1009,7 @@ public class Assignment13GradingTests
 	 * This test is only for the full data set.
 	 */
 	@Test
-	@Autograder(points = 4, group = "full data set")
+	@Autograder(points = 3, group = "full data set")
 	public void testSLCtoMVYDistanceWithDLCarrier()
 	{
 		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "DL");
@@ -1016,7 +1020,7 @@ public class Assignment13GradingTests
 		String correctCost = df1.format(0.0);
 
 		assertTrue(fullAnswer.equals(correctCost));
-		fullDatasetPoints += 5;
+		fullDatasetPoints += 3;
 	}
 
 	// The following tests are only to be 10 points of the final grade
@@ -1217,6 +1221,641 @@ public class Assignment13GradingTests
 		fullDatasetPoints++;
 	}
 
+	// The following tests are for the testfile.csv
+
+	/**
+	 * IXS PWB DISTANCE MQ ['IXS', 'PWB'] 2882
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoPWBwithMQCarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.DISTANCE, "MQ");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(2882.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS PWB DISTANCE ['IXS', 'PWB'] 2882
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoPWBdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(2882.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS PWB COST ['IXS', 'PWB'] 818
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoPWBcostSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.COST);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(818.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS PWB DELAY ['IXS', 'PWB'] 211
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoPWBdelaySmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.DELAY);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(211.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS PWB TIME ['IXS', 'PWB'] 417
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoPWBtimeSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.TIME);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(417.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS PWB CANCELED ['IXS', 'HOS', 'FLB', 'SSX', 'VHA', 'PWB'] 0 -->
+	 * infinitely many paths (cycles of zero), only check cost! also, trickier
+	 * case to solve, more points? only checking cost.
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoPWBcancelledSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.CANCELED);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(0.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS PWB CANCELED MQ ['IXS', 'PWB'] 1 technically, you'll never make it if
+	 * canceled... heh
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoPWBcancelledWithMQCarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "PWB", FlightCriteria.CANCELED, "MQ");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(1.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * PWB IXS DISTANCE [] 0
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testPWBtoIXSdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("PWB", "IXS", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(0.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS SSX DISTANCE ['IXS', 'PWB', 'SSX'] 3563
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoSSXdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "SSX", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(3563.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		assertTrue(checkPath.get(3).equals("SSX"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS SSX TIME ['IXS', 'PWB', 'SSX'] 515
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoSSXtimeSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "SSX", FlightCriteria.TIME);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(515.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		assertTrue(checkPath.get(3).equals("SSX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS SSX COST ['IXS', 'PWB', 'SSX'] 1218.36
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoSSXcostSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "SSX", FlightCriteria.COST);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df2.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df2.format(1218.36);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		assertTrue(checkPath.get(3).equals("SSX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS SSX DELAY ['IXS', 'PWB', 'SSX'] 329
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoSSXdelaySmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "SSX", FlightCriteria.DELAY);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(329.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		assertTrue(checkPath.get(3).equals("SSX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS SSX CANCELED ['IXS', 'HOS', 'FLB', 'SSX'] 0 --> infinitely many paths
+	 * (cycles of zero), only check cost! also, trickier case to solve, more
+	 * points?
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoSSXcancelledSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "SSX", FlightCriteria.CANCELED);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(0.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * SSX IXS DISTANCE [] 0
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testSSXtoIXSdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("SSX", "IXS", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(0.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS XCX DISTANCE ['IXS', 'BYI', 'ACI', 'XCX'] 3314
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testIXStoXCXdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "XCX", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(3314.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("BYI"));
+		assertTrue(checkPath.get(3).equals("ACI"));
+		assertTrue(checkPath.get(4).equals("XCX"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * IXS XCX TIME ['IXS', 'BYI', 'ACI', 'XCX'] 479
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoXCXtimeSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "XCX", FlightCriteria.TIME);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(479.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("BYI"));
+		assertTrue(checkPath.get(3).equals("ACI"));
+		assertTrue(checkPath.get(4).equals("XCX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS XCX COST ['IXS', 'BYI', 'ACI', 'XCX'] 1399.66
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoXCXcostSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "XCX", FlightCriteria.COST);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df2.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df2.format(1399.66);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("BYI"));
+		assertTrue(checkPath.get(3).equals("ACI"));
+		assertTrue(checkPath.get(4).equals("XCX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * IXS XCX DELAY ['IXS', 'PWB', 'ACI', 'XCX'] 490
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testIXStoXCXdelaySmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("IXS", "XCX", FlightCriteria.DELAY);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(490.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("IXS"));
+		assertTrue(checkPath.get(2).equals("PWB"));
+		assertTrue(checkPath.get(3).equals("ACI"));
+		assertTrue(checkPath.get(4).equals("XCX"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * SGZ KZV DISTANCE ['SGZ', 'ATL', 'ZLR', 'PEX', 'KZV'] 1889
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testSGZtoKZVdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("SGZ", "KZV", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(1889.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("SGZ"));
+		assertTrue(checkPath.get(2).equals("ATL"));
+		assertTrue(checkPath.get(3).equals("ZLR"));
+		assertTrue(checkPath.get(4).equals("PEX"));
+		assertTrue(checkPath.get(5).equals("KZV"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * SGZ KZV TIME ['SGZ', 'ATL', 'ZLR', 'PEX', 'KZV'] 272
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testSGZtoKZVtimeSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("SGZ", "KZV", FlightCriteria.TIME);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(272.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("SGZ"));
+		assertTrue(checkPath.get(2).equals("ATL"));
+		assertTrue(checkPath.get(3).equals("ZLR"));
+		assertTrue(checkPath.get(4).equals("PEX"));
+		assertTrue(checkPath.get(5).equals("KZV"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * SGZ KZV COST ['SGZ', 'ATL', 'ZLR', 'PEX', 'KZV'] 1434.18
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testSGZtoKZVcostSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("SGZ", "KZV", FlightCriteria.COST);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df2.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df2.format(1434.18);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("SGZ"));
+		assertTrue(checkPath.get(2).equals("ATL"));
+		assertTrue(checkPath.get(3).equals("ZLR"));
+		assertTrue(checkPath.get(4).equals("PEX"));
+		assertTrue(checkPath.get(5).equals("KZV"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * SGZ KZV DELAY ['SGZ', 'TCP', 'ZRP', 'SEI', 'KZV'] 717
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testSGZtoKZVdelaySmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("SGZ", "KZV", FlightCriteria.DELAY);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(717.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("SGZ"));
+		assertTrue(checkPath.get(2).equals("TCP"));
+		assertTrue(checkPath.get(3).equals("ZRP"));
+		assertTrue(checkPath.get(4).equals("SEI"));
+		assertTrue(checkPath.get(5).equals("KZV"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ DISTANCE ['KZV', 'VJO', 'SGZ'] 1439 --> these are trickier cases!
+	 * 5% of total, or 10 points
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZdistanceSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.DISTANCE);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(1439.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("VJO"));
+		assertTrue(checkPath.get(3).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ DISTANCE EV ['KZV', 'SGZ'] 2478 --> these are trickier cases! 5%
+	 * of total, or 10 points
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZdistanceWithEVcarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.DISTANCE, "EV");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(2478.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ TIME ['KZV', 'VJO', 'SGZ'] 207 --> these are trickier cases! 5%
+	 * of total, or 10 points
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZtimeSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.TIME);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(207.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("VJO"));
+		assertTrue(checkPath.get(3).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ TIME EV ['KZV', 'SGZ'] 359
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testKZVtoSGZtimeWithEVcarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.TIME, "EV");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(359.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("SGZ"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * KZV SGZ COST ['KZV', 'VJO', 'SGZ'] 702.87 --> these are trickier cases!
+	 * 5% of total, or 10 points
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZcostSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.COST);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df2.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df2.format(702.87);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("VJO"));
+		assertTrue(checkPath.get(3).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ COST EV ['KZV', 'SGZ'] 1251.9
+	 */
+	@Test
+	@Autograder(points = 2, group = "small data set")
+	public void testKZVtoSGZcostWithEVcarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.COST, "EV");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(1251.9);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("SGZ"));
+		smallDatasetPoints += 2;
+	}
+
+	/**
+	 * KZV SGZ DELAY ['KZV', 'SGZ'] 455
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZdelaySmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.DELAY);
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(455.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/**
+	 * KZV SGZ DELAY EV ['KZV', 'SGZ'] 455
+	 */
+	@Test
+	@Autograder(points = 1, group = "small data set")
+	public void testKZVtoSGZdelayWithEVcarrierSmallDataset()
+	{
+		BestPath path = smallDataset.getBestPath("KZV", "SGZ", FlightCriteria.DELAY, "EV");
+
+		ArrayList<String> checkPath = breakUpPath(path);
+
+		String answer = df1.format(Double.parseDouble(checkPath.get(0)));
+		String correctAnswer = df1.format(455.0);
+
+		assertTrue(answer.equals(correctAnswer));
+		assertTrue(checkPath.get(1).equals("KZV"));
+		assertTrue(checkPath.get(2).equals("SGZ"));
+		smallDatasetPoints++;
+	}
+
+	/*
+
+	
+	
+	 */
 	/**
 	 * This method itemizes each piece of the given path in an ArrayList of
 	 * Strings.
