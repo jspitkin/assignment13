@@ -3,6 +3,7 @@ package assignment13;
 import static org.junit.Assert.*;
 
 import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,6 +20,8 @@ public class Assignment13GradingTests
 	static NetworkGraph aggregatedDataset, fullDataset, smallDataset;
 	static int total, aggregatePoints, fullDatasetPoints, smallDatasetPoints;
 	static DecimalFormat df4, df2, df1;
+	boolean partialCredit = false;
+	boolean resetFullDataset = false;
 
 	@BeforeClass
 	public static void setUp() throws Exception
@@ -34,6 +37,19 @@ public class Assignment13GradingTests
 		df2 = new DecimalFormat("0.00");
 		df1 = new DecimalFormat("0.0");
 
+	}
+	
+	// if giving partial credit, reset the graph variables
+	// gives points back to students who forgot to reinitialize for Dijkstra's
+	@After
+	public void resetData() throws Exception {
+		if(partialCredit) {
+			aggregatedDataset = new NetworkGraph("aggregates.csv");
+			if(resetFullDataset) {
+				fullDataset = new NetworkGraph("flights-2015-q3.csv");
+			}
+			smallDataset = new NetworkGraph("testfile.csv");
+		}
 	}
 
 	// uncomment to see total
@@ -82,6 +98,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testMOBtoACVDistanceFullData()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("MOB", "ACV", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -106,6 +123,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testSFOtoDFWDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("SFO", "DFW", FlightCriteria.DISTANCE, "DL");
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -152,6 +170,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testMOBtoSLCTimeFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("MOB", "SLC", FlightCriteria.TIME);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -197,6 +216,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testLAStoLAXCostFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("LAS", "LAX", FlightCriteria.COST);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -244,6 +264,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testSLCtoMVYDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -293,6 +314,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACKtoACVDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACK", "ACV", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -337,6 +359,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACKtoACVCancelledFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACK", "ACV", FlightCriteria.CANCELED);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -377,6 +400,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACKtoWYSDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACK", "WYS", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -417,6 +441,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACKtoWYSCancelledFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACK", "WYS", FlightCriteria.CANCELED);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -461,6 +486,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACVtoWYSDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACV", "WYS", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -504,6 +530,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testACVtoWYSCancelledFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ACV", "WYS", FlightCriteria.CANCELED);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -543,6 +570,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testMOBtoSLCDistance()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("MOB", "SLC", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -583,6 +611,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testMOBtoMVYDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("MOB", "MVY", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -625,6 +654,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testITOtoMOBDistance()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ITO", "MOB", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -672,6 +702,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testKOAtoITODistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("KOA", "ITO", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -713,6 +744,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testKOAtoCWADistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("KOA", "CWA", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -756,6 +788,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testANCtoITODistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("ANC", "ITO", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -803,6 +836,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testFAItoITODistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("FAI", "ITO", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -849,6 +883,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testFAItoANCDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("FAI", "ANC", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -890,6 +925,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testFAItoGNVDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("FAI", "GNV", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -928,6 +964,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testFLLtoFAIDistance()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("FLL", "FAI", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -969,6 +1006,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 2, group = "full data set")
 	public void testPWMtoMVYDistanceFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("PWM", "MVY", FlightCriteria.DISTANCE);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -990,6 +1028,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 7, group = "full data set")
 	public void testSLCtoMVYDistanceWithB6CarrierFullDataset()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "B6");
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -1012,6 +1051,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 3, group = "full data set")
 	public void testSLCtoMVYDistanceWithDLCarrier()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("SLC", "MVY", FlightCriteria.DISTANCE, "DL");
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -1079,6 +1119,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testFCAtoMSOCost()
 	{
+		resetFullDataset = true;
 		BestPath fullDatasetPath = aggregatedDataset.getBestPath("FCA", "MSO", FlightCriteria.COST);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullDatasetPath);
@@ -1101,6 +1142,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testMEItoPIBCost()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("MEI", "PIB", FlightCriteria.COST);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -1120,6 +1162,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testINLtoHIBCost()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("INL", "HIB", FlightCriteria.COST);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -1142,6 +1185,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testSAVtoBQKCost()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("SAV", "BQK", FlightCriteria.COST);
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
 
@@ -1163,6 +1207,7 @@ public class Assignment13GradingTests
 	@Autograder(points = 1, group = "full data set")
 	public void testHIBtoINLCost()
 	{
+		resetFullDataset = true;
 		BestPath fullPath = fullDataset.getBestPath("HIB", "INL", FlightCriteria.COST);
 
 		ArrayList<String> checkFullPath = breakUpPath(fullPath);
@@ -1861,11 +1906,11 @@ public class Assignment13GradingTests
 	 * Strings.
 	 * 
 	 * @param thePath
-	 *            is the best path produced by a Network Graph search
+	 *						is the best path produced by a Network Graph search
 	 * @return An ArrayList of Strings. The first element in the list is the
-	 *         cost of the path, the remainder of the list is the actual path.
+	 *				 cost of the path, the remainder of the list is the actual path.
 	 * 
-	 *         For example: [2253.0, MOB, DFW, SFO, AC]
+	 *				 For example: [2253.0, MOB, DFW, SFO, AC]
 	 */
 	public ArrayList<String> breakUpPath(BestPath thePath)
 	{
