@@ -1,14 +1,16 @@
 package assignment13;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.AfterClass;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import java.io.File;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import autograderutils.annotations.Autograder;
 
@@ -26,9 +28,9 @@ public class Assignment13GradingTests
 	@BeforeClass
 	public static void setUp() throws Exception
 	{
-		aggregatedDataset = new NetworkGraph("aggregates.csv");
-		fullDataset = new NetworkGraph("flights-2015-q3.csv");
-		smallDataset = new NetworkGraph("testfile.csv");
+		aggregatedDataset = new NetworkGraph(findPath("aggregates.csv"));
+		fullDataset = new NetworkGraph(findPath("flights-2015-q3.csv"));
+		smallDataset = new NetworkGraph(findPath("testfile.csv"));
 		total = 0;
 		aggregatePoints = 0; // total of 20 points
 		fullDatasetPoints = 0; // total of 60 points
@@ -39,16 +41,24 @@ public class Assignment13GradingTests
 
 	}
 	
+	private static String findPath(String path) {
+		URL url = Assignment13GradingTests.class.getClassLoader().getResource(path);
+		if(url == null) {
+			return new File(path).getAbsolutePath();
+		}
+		return url.getPath();
+	}
+
 	// if giving partial credit, reset the graph variables
 	// gives points back to students who forgot to reinitialize for Dijkstra's
 	@After
 	public void resetData() throws Exception {
 		if(partialCredit) {
-			aggregatedDataset = new NetworkGraph("aggregates.csv");
+			aggregatedDataset = new NetworkGraph(findPath("aggregates.csv"));
 			if(resetFullDataset) {
-				fullDataset = new NetworkGraph("flights-2015-q3.csv");
+				fullDataset = new NetworkGraph(findPath("flights-2015-q3.csv"));
 			}
-			smallDataset = new NetworkGraph("testfile.csv");
+			smallDataset = new NetworkGraph(findPath("testfile.csv"));
 		}
 	}
 
